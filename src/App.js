@@ -15,11 +15,13 @@ const url = [
 
 const App = () => {
   const [quote, setQuote] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getQuotes();
   }, [])
   const getQuotes = () => {
+    setIsLoading(true);
     const randomIndex = Math.floor(Math.random() * url.length);
     const item = url[randomIndex];
     let data = {};
@@ -31,14 +33,18 @@ const App = () => {
             author: responseData.author || "Unknown"
           }
         setQuote(data);
+        setIsLoading(false);
       })
       .catch(() => {
         data = {
           quote: "Ops! Something went wrong please try again"
         }
         setQuote(data);
+        setIsLoading(false);
       });
   }
+
+  const btnText = isLoading ? "Loading..." : "Get Quote";
 
   return (
     <header className="masthead">
@@ -48,7 +54,7 @@ const App = () => {
           <h5 className="mx-auto my-0 text-uppercase">Author:</h5>
           <h1 className="mx-auto my-0 text-uppercase">{quote.author}</h1>
           <h2 className="text-white-50 mx-auto mt-2 mb-5">{quote.quote}</h2>
-          <button className="btn btn-primary js-scroll-trigger" onClick={() => getQuotes()}>Get Quote</button>
+          <button className="btn btn-primary js-scroll-trigger" onClick={() => getQuotes()}>{btnText}</button>
         </div>
       </div>
     </header>
